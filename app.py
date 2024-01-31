@@ -51,7 +51,7 @@ def find_classification():
                 print('dimming_num', dimming_num)
                 # control_function.control_light_dimming(unit_status=unit_status, dimming_num = dimming_num)
                 ai_response = "조명 조절을 완료하였습니다."
-            print("채팅 결과 : ", ai_response)
+            print("채팅 결과 읽기: ", ai_response)
 
                     
             response_data = {'cateCode': category_num}
