@@ -51,33 +51,18 @@ def find_classification():
                 print('dimming_num', dimming_num)
                 # control_function.control_light_dimming(unit_status=unit_status, dimming_num = dimming_num)
                 ai_response = "조명 조절을 완료하였습니다."
-                
-            elif category_num == 4: # 4. Function guide
-                ai_response = gpt_function_guide.get_guide(input_text)
-                ai_response = ai_response.replace("'"," ")
-                ai_response = ai_response.replace('"'," ")
-                ai_response = ai_response.replace('. ',".\n")
-
-            else: #5. All other categories.\
-                ai_response = gpt_chat.chat_with_gpt({"query": input_text})
-            
-                response_data = {'answer': ai_response}
-                ai_response = ai_response.replace("'"," ")
-                ai_response = ai_response.replace('"'," ")
-                ai_response = ai_response.replace('. ',".\n")
-                
             print("채팅 결과 : ", ai_response)
 
-                 
-            response_data = {'answer': ai_response}
-            return tts.get_tts_result(response_data)
+                    
+            response_data = {'cateCode': category_num}
+            return response_data
 
 
         elif classification_result == None:
             return jsonify({'error': 'classfication 분류 실패'}), 500
     except:
-            return jsonify({'error': 'classification 과정에서 문제가 발생했습니다.'}), 500
+        return jsonify({'error': 'classification 과정에서 문제가 발생했습니다.'}), 500
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    app.run(debug=True, host='0.0.0.0', port=80)

@@ -20,8 +20,6 @@ def classification_and_do_process(query):
                     1. Turn on the lights, \
                     2. Turn off the lights, \
                     3. Light mode (ex: movie mode, study mode), \
-                    4. Function guide, \
-                    5. All other categories.\
                     sentence: {query}\
                     p.s your answer always must follow that 'number. categories'.
                     """
@@ -35,8 +33,6 @@ def classification_and_do_process(query):
     1. Turn on the lights, \
     2. Turn off the lights, \
     3. Light mode (ex: movie mode, study mode), \
-    4. Function guide, \
-    5. All other categories.\
     """
     
     classification_content = classification.choices[0].message.content
