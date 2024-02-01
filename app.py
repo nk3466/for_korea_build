@@ -16,7 +16,7 @@ def find_classification():
 
     data = request.get_json()
     input_text = data['query']
-
+    print('왔어?', input_text)
     try:
         # query를 분류  
         classification_result = classification.classification_and_do_process(input_text)
@@ -65,4 +65,6 @@ def find_classification():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=80)
+    app.run(debug=True, host='192.168.50.170', port=8888)
+    
+    # host='192.168.50.180', port=8888
