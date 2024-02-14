@@ -49,11 +49,20 @@ def find_classification():
                 dimming_num = gpt_dimming.get_dimming_num(input_text)
                 unit_status = 'on'
                 print('dimming_num', dimming_num)
-                # control_function.control_light_dimming(unit_status=unit_status, dimming_num = dimming_num)
+                control_function.control_light_dimming(unit_status=unit_status, dimming_num = dimming_num)
                 ai_response = "조명 조절을 완료하였습니다."
-            print("채팅 결과: ", ai_response)
+            
+            elif category_num == 4: # 4. Turn on the fan,
+                unit_status = 'on/null/null/null/null'
+                control_function.control_fan(unit_status=unit_status)
+                ai_response = "팬을 켰습니다."
+                
+            elif category_num == 5: #5. Turn off the fan
+                unit_status = 'off/null/null/null/null'
+                control_function.control_fan(unit_status=unit_status)
+                ai_response = "조명 조절을 완료하였습니다."
 
-                    
+            print("채팅 결과: ", ai_response)
             response_data = {'cateCode': category_num}
             return response_data
 
@@ -65,6 +74,6 @@ def find_classification():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.50.170', port=8888)
+    app.run(debug=True, host='0.0.0.0', port=8888)
     
     # host='192.168.50.180', port=8888

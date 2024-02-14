@@ -11,21 +11,23 @@ def classification_and_do_process(query):
     classification_client = OpenAI()
 
     classification = classification_client.chat.completions.create(
-        messages = [
-            {
-                "role": "user", 
-                "content": f"""
-                    Classification Task:
-                    You are a classification model for a smart speaker mounted on the wall. Consider the conversation history provided above to understand the context. Your task is to categorize the following sentence into the appropriate category based on this context. The categories are as follows:
-                    1. Turn on the lights, \
-                    2. Turn off the lights, \
-                    3. Light mode (ex: movie mode, study mode), \
-                    sentence: {query}\
-                    p.s your answer always must follow that 'number. categories'.
-                    """
-            }
-        ],
-        model = "gpt-4"
+    messages = [
+        {
+            "role": "user", 
+            "content": f"You are a classification model for a smart speaker mounted on the wall. Your task is to categorize the following sentence into the appropriate category. The categories are as follows: \
+                1. Turn on the lights, \
+                2. Turn off the lights, \
+                3. Light mode (ex: movie mode, study mode), \
+                4. Turn on the fan, \
+                5. Turn off the fan, \
+                6. All other categories.\
+                sentence: {query}\
+                p.s category number 4 and 5 fan is for air conditioning, your answer always must follow that format -> 'number. categories'."
+        }
+    ],
+    # model = "gpt-3.5-turbo"
+    # model = "gpt-4-1106-preview"
+    model = "gpt-4"
     )
     
 
@@ -39,102 +41,102 @@ def classification_and_do_process(query):
     return classification_content
 
 
-import xml.etree.ElementTree as ET
-import requests
-import re
+# import xml.etree.ElementTree as ET
+# import requests
+# import re
 
-# def create_xml(action, ctrl_action=None, unit_num=None):
-#     imap_elem = ET.Element('imap', ver="1.0", address="192.168.100.93", sender="gpu_server93")
-#     service_elem = ET.SubElement(imap_elem, "service", type="request", name="remote_access_light")
-#     target_elem = ET.SubElement(service_elem, "target", name="mobile", id="1", msg_no="11")
-#     action_elem = ET.SubElement(service_elem, "action")
-#     action_elem.text = action
+# # def create_xml(action, ctrl_action=None, unit_num=None):
+# #     imap_elem = ET.Element('imap', ver="1.0", address="192.168.100.93", sender="gpu_server93")
+# #     service_elem = ET.SubElement(imap_elem, "service", type="request", name="remote_access_light")
+# #     target_elem = ET.SubElement(service_elem, "target", name="mobile", id="1", msg_no="11")
+# #     action_elem = ET.SubElement(service_elem, "action")
+# #     action_elem.text = action
 
-#     params = {
-#         "dev_num": "1"
+# #     params = {
+# #         "dev_num": "1"
+# #     }
+# #     if unit_num:
+# #         params["unit_num"] = unit_num
+# #     if ctrl_action:
+# #         params["ctrl_action"] = ctrl_action
+# #     else:
+# #         params["uni_num"] = "null"
+# #         params["ctrl_action"] = "null"
+
+# #     params_elem = ET.SubElement(service_elem, "params", **params)
+
+# #     return ET.tostring(imap_elem, encoding="utf-8", method="xml")
+
+# def after_process(class_, input_text, history):
+    
+#     payload = {
+#                     "query": input_text,
+#                     "chatHistory": history,
+#                 }
+
+#     headers = {
+#         "accept": "application/json",
+#         "content-type": "application/json",
 #     }
-#     if unit_num:
-#         params["unit_num"] = unit_num
-#     if ctrl_action:
-#         params["ctrl_action"] = ctrl_action
-#     else:
-#         params["uni_num"] = "null"
-#         params["ctrl_action"] = "null"
-
-#     params_elem = ET.SubElement(service_elem, "params", **params)
-
-#     return ET.tostring(imap_elem, encoding="utf-8", method="xml")
-
-def after_process(class_, input_text, history):
-    
-    payload = {
-                    "query": input_text,
-                    "chatHistory": history,
-                }
-
-    headers = {
-        "accept": "application/json",
-        "content-type": "application/json",
-    }
-    NEWS_SERVER_URL = 'http://192.168.100.93:5001/'
-    print('분류 : ',class_)
-    if class_ == "1. Turn on the lights":
-        print("Turn on")
-        target_url = os.path.join(NEWS_SERVER_URL, 'turn_on')
-        response = requests.post(target_url, json=payload, headers=headers).json()
-        return response
+#     NEWS_SERVER_URL = 'http://192.168.100.93:5001/'
+#     print('분류 : ',class_)
+#     if class_ == "1. Turn on the lights":
+#         print("Turn on")
+#         target_url = os.path.join(NEWS_SERVER_URL, 'turn_on')
+#         response = requests.post(target_url, json=payload, headers=headers).json()
+#         return response
   
-    elif class_ == "2. Turn off the lights":
-        print("Turn off")
-        target_url = os.path.join(NEWS_SERVER_URL, 'turn_off')
-        response = requests.post(target_url, json=payload, headers=headers).json()
-        return response
+#     elif class_ == "2. Turn off the lights":
+#         print("Turn off")
+#         target_url = os.path.join(NEWS_SERVER_URL, 'turn_off')
+#         response = requests.post(target_url, json=payload, headers=headers).json()
+#         return response
     
     
-    elif class_ == "3. News briefing":
-        target_url = os.path.join(NEWS_SERVER_URL, 'news')
-        print(payload)
-        response = requests.post(target_url, json=payload, headers=headers).json()
-        print(response)
-        return response
-        # answer = response['answer']
-        # audio_content = response['audioContent']
+#     elif class_ == "3. News briefing":
+#         target_url = os.path.join(NEWS_SERVER_URL, 'news')
+#         print(payload)
+#         response = requests.post(target_url, json=payload, headers=headers).json()
+#         print(response)
+#         return response
+#         # answer = response['answer']
+#         # audio_content = response['audioContent']
 
-    # elif class_ == "4. Cooking menu recommendation":
-    #     target_url = os.path.join(NEWS_SERVER_URL, 'recipes')
-    #     response = requests.post(target_url, json=payload, headers=headers).json()
-    #     return response
-        answer = response['answer']
-        audio_content = response['audioContent']
+#     # elif class_ == "4. Cooking menu recommendation":
+#     #     target_url = os.path.join(NEWS_SERVER_URL, 'recipes')
+#     #     response = requests.post(target_url, json=payload, headers=headers).json()
+#     #     return response
+#         answer = response['answer']
+#         audio_content = response['audioContent']
 
-    elif class_ == "5. Traffic situation":
-        target_url = os.path.join(NEWS_SERVER_URL, 'routes')
-        response = requests.post(target_url, json=payload, headers=headers).json()
-        return response
-        # answer = response['answer']
-        # audio_content = response['audioContent']
+#     elif class_ == "5. Traffic situation":
+#         target_url = os.path.join(NEWS_SERVER_URL, 'routes')
+#         response = requests.post(target_url, json=payload, headers=headers).json()
+#         return response
+#         # answer = response['answer']
+#         # audio_content = response['audioContent']
     
-    elif class_ == "6. Light mode (ex: movie mode, study mode)":
-        target_url = os.path.join(NEWS_SERVER_URL, 'light_mode')
-        response = requests.post(target_url, json=payload, headers=headers).json()
-        return response
+#     elif class_ == "6. Light mode (ex: movie mode, study mode)":
+#         target_url = os.path.join(NEWS_SERVER_URL, 'light_mode')
+#         response = requests.post(target_url, json=payload, headers=headers).json()
+#         return response
     
     
-    elif class_ == "8. Weather briefing":
-        target_url = os.path.join(NEWS_SERVER_URL, 'weather')
-        response = requests.post(target_url, json=payload, headers=headers).json()
-        return response
+#     elif class_ == "8. Weather briefing":
+#         target_url = os.path.join(NEWS_SERVER_URL, 'weather')
+#         response = requests.post(target_url, json=payload, headers=headers).json()
+#         return response
 
 
-    elif class_ == "9. Function guide":
-        target_url = os.path.join(NEWS_SERVER_URL, 'function_guide')
-        response = requests.post(target_url, json=payload, headers=headers).json()
-        return response
+#     elif class_ == "9. Function guide":
+#         target_url = os.path.join(NEWS_SERVER_URL, 'function_guide')
+#         response = requests.post(target_url, json=payload, headers=headers).json()
+#         return response
 
-    elif class_ =='10. All other categories.':
-        target_url = os.path.join(NEWS_SERVER_URL, 'chat')
-        response = requests.post(target_url, json=payload, headers=headers).json()
-        return response
+#     elif class_ =='10. All other categories.':
+#         target_url = os.path.join(NEWS_SERVER_URL, 'chat')
+#         response = requests.post(target_url, json=payload, headers=headers).json()
+#         return response
         # main_client = OpenAI(api_key = api_key)
         # # classification_content = classification.choices[0].message.content
 
@@ -181,6 +183,6 @@ def after_process(class_, input_text, history):
         #         break
         #     else:
         #         time.sleep(0.1)
-        return answer
+        # return answer
     # elif class_ == "":
 
