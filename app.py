@@ -37,12 +37,12 @@ def find_classification():
             
             if category_num == 1: # 1. Turn on the lights
                 unit_status = 'on'
-                # control_function.control_light(unit_status)  
+                control_function.control_light(unit_status)  
                 ai_response = "네! 조명을 키겠습니다."
                 
             elif category_num == 2: # 2. Turn off the lights
                 unit_status = 'off'
-                # control_function.control_light(unit_status) 
+                control_function.control_light(unit_status) 
                 ai_response = "네! 조명을 끄겠습니다."
                 
             elif category_num == 3: # 3. Light mode (ex: movie mode, study mode)

@@ -23,10 +23,11 @@ def create_xml(action, dev_num="1", dev_mode="null", unit_num="1", unit_status="
     return ET.tostring(imap_elem, encoding="utf-8", method="xml")
 
 
-    
+target_url = "https://223.171.136.185/v2/admin/sys/transfer/10.1.1.1?port=11000&secure=true"
+
 def control_light(unit_status):
     headers = {'Content-Type': 'application/xml'}
-    target_url = "http://192.168.110.100/v2/admin/sys/transfer/10.20.3.17?port=11000&secure=true"
+    # target_url = "http://192.168.110.100/v2/admin/sys/transfer/10.20.3.17?port=11000&secure=true"
     control_xml = create_xml(action="control", unit_status=unit_status)
     control_response = requests.post(target_url, data=control_xml, headers=headers)
     return control_response
@@ -34,7 +35,7 @@ def control_light(unit_status):
 def control_light_dimming(unit_status, dimming_num):
     headers = {'Content-Type': 'application/xml'}
     print('dimming_num', dimming_num)
-    target_url = "http://192.168.110.100/v2/admin/sys/transfer/10.20.3.17?port=11000&secure=true"
+    # target_url = "http://192.168.110.100/v2/admin/sys/transfer/10.20.3.17?port=11000&secure=true"
     control_xml = create_xml(action="control", unit_status=str(unit_status), unit_dimming=str(dimming_num[0]), unit_color = str(dimming_num[1]))
     control_response = requests.post(target_url, data=control_xml, headers=headers)
     return control_response
