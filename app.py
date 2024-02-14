@@ -32,7 +32,7 @@ def find_classification():
             # 실행 시간 계산
             end_time = time.time()
             elapsed_time = end_time - start_time
-            print(f"코드 실행 시간: {elapsed_time} 초")
+            # print(f"코드 실행 시간: {elapsed_time} 초")
             
             
             if category_num == 1: # 1. Turn on the lights
