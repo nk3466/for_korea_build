@@ -1,7 +1,6 @@
 from openai import OpenAI
 import time
 from dotenv import load_dotenv
-import pandas as pd
 import os
 
 load_dotenv()
@@ -15,14 +14,20 @@ def classification_and_do_process(query):
         {
             "role": "user", 
             "content": f"You are a classification model for a smart speaker mounted on the wall. Your task is to categorize the following sentence into the appropriate category. The categories are as follows: \
+                \
                 1. Turn on the lights, \
                 2. Turn off the lights, \
                 3. Light mode (ex: movie mode, study mode), \
-                4. Turn on the fan, \
-                5. Turn off the fan, \
-                6. All other categories.\
+                4. Turn on the gas valve, \
+                5. Turn off the gas valve, \
+                6. Turn on house heater, \
+                7. Turn off house heater, \
+                8. Set house heater target temperature, \
+                9. Turn on ventilation fan, \
+                10. Turn off ventilation fan, \
+                11. All other categories.\
                 sentence: {query}\
-                p.s category number 4 and 5 fan is for air conditioning, your answer always must follow that format -> 'number. categories'."
+                p.s your answer always must follow that format -> 'number. categories'."
         }
     ],
     # model = "gpt-3.5-turbo"
@@ -30,12 +35,6 @@ def classification_and_do_process(query):
     model = "gpt-4"
     )
     
-
-    """
-    1. Turn on the lights, \
-    2. Turn off the lights, \
-    3. Light mode (ex: movie mode, study mode), \
-    """
     
     classification_content = classification.choices[0].message.content
     return classification_content

@@ -1,8 +1,7 @@
 import xml.etree.ElementTree as ET
 import requests
 
-def create_xml(name, action, dev_num="1", dev_mode="null", unit_num="3", unit_status="on", unit_dimming='5', unit_color="5"):
-    
+def create_xml(name, action, dev_num="1", dev_mode="null", unit_num="all", unit_status="on", unit_dimming='5', unit_color="5"):
     imap_elem = ET.Element('imap', ver="1.0", address="192.168.100.93", sender="server")
     service_elem = ET.SubElement(imap_elem, "service", type="request", name=name)# "remote_access_smartlight")
     target_elem = ET.SubElement(service_elem, "target", name="server2.0_new_auth", id="1", msg_no="11")
@@ -44,34 +43,23 @@ def create_xml_(name, action, dev_cnt = "all", dev_num = "1", unit_cnt = "null",
 
     return ET.tostring(imap_elem, encoding="utf-8", method="xml")
 
+def create_xml_other(name, action, dev_cnt = "all", dev_num = "1", unit_cnt = "gas1", ctrl_action = "close"):
 
+    imap_elem = ET.Element('imap', ver="1.0", address = "", sender = "server")
+    service_elem = ET.SubElement(imap_elem, "service", type = "request", name=name)
+    target_elem = ET.SubElement(service_elem, "target", name = "server2.0_new_auth", id = "1", msg_no = "11")
+    action_elem = ET.SubElement(service_elem, "action")
+    action_elem.text = action
+    cnt_elem = ET.SubElement(service_elem, "dev_cnt")
+    cnt_elem.text = dev_cnt
 
+    params = {
+        "dev_num" : dev_num,
+        "unit_cnt" : unit_cnt,
+        "ctrl_action" : ctrl_action 
+    }
 
-target_url = "https://223.171.136.185/v2/admin/sys/transfer/10.1.1.1?port=11000&secure=true"
+    params_elem = ET.SubElement(service_elem, "dev_params", **params)
+    device_info_elem = ET.SubElement(service_elem, "device_info", alias = "test_phone", twinid="F6B253A39360F76356007356E79A3F82948582ADE31E3E77598FA127BFC69F36")
 
-def control_light(unit_status):
-    headers = {'Content-Type': 'application/xml'}
-    # target_url = "http://192.168.110.100/v2/admin/sys/transfer/10.20.3.17?port=11000&secure=true"
-    control_xml = create_xml(name="remote_access_smartlight", action="control", unit_status=unit_status)#, "switch1")
-    control_response = requests.post(target_url, data=control_xml, headers=headers, verify=False)
-    return control_response
-    
-def control_light_dimming(unit_status, dimming_num):
-    headers = {'Content-Type': 'application/xml'}
-    print('dimming_num', dimming_num)
-    # target_url = "http://192.168.110.100/v2/admin/sys/transfer/10.20.3.17?port=11000&secure=true"
-    control_xml = create_xml(action="control", unit_status=str(unit_status), unit_dimming=str(dimming_num[0]), unit_color = str(dimming_num[1]))
-    control_response = requests.post(target_url, data=control_xml, headers=headers)
-    
-    control_xml_ = create_xml_(name = "remote_access_multivent", action="control", ctrl_action = "on/null/null/null/null")
-    control_response_ = requests.post(target_url, data=control_xml_, headers=headers, verify=False)
-    
-    return control_response
-
-
-def control_fan(unit_status):
-    headers = {'Content-Type': 'application/xml'}
-    control_xml = create_xml_(name="remote_access_multivent", action="control", ctrl_action = "on/null/null/null/null")
-    control_response = requests.post(target_url, data=control_xml, headers=headers, verify=False)
-
-    return control_response
+    return ET.tostring(imap_elem, encoding="utf-8", method="xml")
